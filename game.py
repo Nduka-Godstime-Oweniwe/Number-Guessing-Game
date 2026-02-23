@@ -14,14 +14,34 @@ def try_int(x,y):
             return int(input(x))
         except ValueError:
             print("Invalid",y)
-#easy= 3tries-10
-#medium=4tries-20
-#hard=4tries-30
-#veryhard=5tries-50
-#Master=5tries -70
-#Legend=6tries - 100
-def play_game(tries,range):
-    
+
+#1. Easy - 5 tries, Range(1,20)
+#2. Medium- 5 tries, Range(1,40)
+#3. Hard - 5 tries, Range(1,60)
+#4. Master - 5 tries, Range(1,80)
+#5. Legend - 5 tries, Range(1,100)
+
+
+def play_game(range):
+    tries=5
+    ans=random.randint(1,20*range)
+    print(f"I am a number between between 1 and {20*range}")
+    print(ans)
+    while tries!=0:
+        user_guess=try_int("Guess the number: ","number")
+        tries-=1
+        time.sleep(0.5)
+        if user_guess>20*range or user_guess<0:
+            print("Your guess is is out of range")
+        elif user_guess>ans:
+            print("Ooops!!! Too high! Try again")
+        
+        elif user_guess<ans:
+            print("Ooops!!! Too low! Try again")
+        else:
+            print("Correct! you're a genius")
+            break
+        time.sleep(1)
 
 
 outer_loop1=True
@@ -35,16 +55,20 @@ while outer_loop1:
         else:
             break
     #User exits Game
+    clear()
     if user_option==1:
-        print("1. Easy\n2. Medium\n3. Hard\n4. Very Hard\n5. Master\n6. Legend")    
+        print("1. Easy\n2. Medium\n3. Hard\n4. Master\n5. Legend")    
         while True:
             difficulty_level=try_int("Select a Difficulty Level: ","option") 
-            if difficulty_level>6:
+            if difficulty_level>5:
                 print("Invalid Option")
             else:
+                time.sleep(0.5)
+                clear()
+                play_game(difficulty_level)
+                outer_loop1=False
                 break
     elif user_option==4:
-        clear()
         time.sleep(0.5)
         print("Exiting Game...")
         time.sleep(1)
@@ -52,9 +76,10 @@ while outer_loop1:
         time.sleep(1)
         outer_loop1=False   
     elif user_option==3:
-        print("1. The computer generates a random number between 1 and 10,20,30 depending on the level you choose")
-        print("1. Guess the number")
-        print("2. You have limited number of trials depending on the difficulty level you choose")
+        print("1. The computer generates a random number between 1 and 20,40,60 depending on the level you choose")
+        print("2. Guess the number")
+        print("3. You have only 5 tries")
+        input("Press any key to go back: ")
 
     
 
