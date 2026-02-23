@@ -1,6 +1,7 @@
 import os
 import time
 import random
+import json
 
 def clear():
     if os.name=="nt":
@@ -23,25 +24,60 @@ def try_int(x,y):
 
 
 def play_game(range):
-    tries=5
-    ans=random.randint(1,20*range)
-    print(f"I am a number between between 1 and {20*range}")
-    print(ans)
-    while tries!=0:
-        user_guess=try_int("Guess the number: ","number")
-        tries-=1
-        time.sleep(0.5)
-        if user_guess>20*range or user_guess<0:
-            print("Your guess is is out of range")
-        elif user_guess>ans:
-            print("Ooops!!! Too high! Try again")
-        
-        elif user_guess<ans:
-            print("Ooops!!! Too low! Try again")
-        else:
-            print("Correct! you're a genius")
-            break
-        time.sleep(1)
+    if os.path.exists("score.json"):
+        try:
+            with open("score.json","r") as f:
+                High_score=json.load(f)
+        except:
+            os.remove("score.json")
+    else:
+        High_score=0
+    game_loop=True
+    score=0
+    while game_loop:
+        tries=5
+        ans=random.randint(1,20*range)
+        print(f"I am a number between between 1 and {20*range}")
+        print(ans)
+        while tries!=0:
+            user_guess=try_int("Guess the number: ","number")
+            tries-=1
+            time.sleep(0.5)
+            if user_guess>20*range or user_guess<0:
+                print("Your guess is is out of range")
+            elif user_guess>ans:
+                print("Ooops!!! Too high! Try again")
+            
+            elif user_guess<ans:
+                print("Ooops!!! Too low! Try again")
+            else:
+                print("Correct! you're a genius")
+              
+                score+=range
+                break
+        if score>High_score:
+            print(f"Congratulations!!! You have the new High Score: {score}")
+            time.sleep(1)
+            with open("score.json","w") as f:
+                json.dump(score,f)
+        clear()
+        print("Replay Game?\n1. Yes\n2. No")
+        loop2=True
+        while loop2:
+            user_option=try_int("Select an option: ","option")
+            if user_option==1:
+                clear()
+                loop2=False
+            elif user_option==2:
+                print("Exiting Game...")
+                time.sleep(1)           
+                game_loop=False
+                loop2=False
+            else:
+                print("Invalid Option")
+                time.sleep(1)
+    
+    
 
 
 outer_loop1=True
@@ -54,9 +90,11 @@ while outer_loop1:
             print("Invalid Option")
         else:
             break
-    #User exits Game
+
+
     clear()
     if user_option==1:
+        score=0
         print("1. Easy\n2. Medium\n3. Hard\n4. Master\n5. Legend")    
         while True:
             difficulty_level=try_int("Select a Difficulty Level: ","option") 
@@ -68,6 +106,18 @@ while outer_loop1:
                 play_game(difficulty_level)
                 outer_loop1=False
                 break
+    elif user_option==2:
+        if os.path.exists("score.json"):
+            try:
+                with open("score.json","r")as f:
+                    score=json.load(f)
+                    print(f"Your High Score is: {score}")   
+                    time.sleep(3)
+            except:
+                os.remove("score.json")
+        else:
+            print("Your High Score is: 0")
+            time.sleep(2)
     elif user_option==4:
         time.sleep(0.5)
         print("Exiting Game...")
